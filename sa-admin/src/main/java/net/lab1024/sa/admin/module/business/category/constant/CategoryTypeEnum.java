@@ -28,6 +28,11 @@ public enum CategoryTypeEnum implements BaseEnum {
      */
     CUSTOM(2, "自定义"),
 
+    /**
+     * 3 材料
+     */
+    MATERIAL(3, "材料"),
+
     ;
 
     private final Integer value;

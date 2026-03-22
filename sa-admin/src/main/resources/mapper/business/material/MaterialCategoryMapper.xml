@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.business.material.dao.MaterialCategoryDao">
+
+    <select id="queryByParentId"
+            resultType="net.lab1024.sa.admin.module.business.material.domain.entity.MaterialCategoryEntity">
+        SELECT * FROM b_material_category
+        WHERE
+        parent_id IN
+        <foreach collection="parentIdList" open="(" separator="," close=")" item="id">#{id}</foreach>
+        AND deleted_flag = #{deletedFlag}
+        ORDER BY sort ASC
+    </select>
+
+    <select id="queryAll"
+            resultType="net.lab1024.sa.admin.module.business.material.domain.entity.MaterialCategoryEntity">
+        SELECT * FROM b_material_category
+        WHERE deleted_flag = #{deletedFlag}
+        ORDER BY sort ASC
+    </select>
+
+    <select id="selectByCategoryCode"
+            resultType="net.lab1024.sa.admin.module.business.material.domain.entity.MaterialCategoryEntity">
+        SELECT * FROM b_material_category
+        WHERE category_code = #{categoryCode}
+        AND deleted_flag = 0
+        LIMIT 1
+    </select>
+
+    <select id="selectOne"
+            resultType="net.lab1024.sa.admin.module.business.material.domain.entity.MaterialCategoryEntity">
+        SELECT * FROM b_material_category
+        <where>
+            <if test="parentId != null">
+                AND parent_id = #{parentId}
+            </if>
+            <if test="categoryName != null">
+                AND category_name = #{categoryName}
+            </if>
+            <if test="categoryCode != null">
+                AND category_code = #{categoryCode}
+            </if>
+            <if test="deletedFlag != null">
+                AND deleted_flag = #{deletedFlag}
+            </if>
+        </where>
+        LIMIT 1
+    </select>
+
+</mapper>

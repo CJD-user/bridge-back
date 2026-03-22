@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.business.material.dao.MaterialDao">
+
+    <!-- 批量更新删除状态 -->
+    <update id="batchUpdateDeleted">
+        UPDATE b_material
+        SET deleted_flag = #{deletedFlag}
+        WHERE material_id IN
+        <foreach collection="materialIdList" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 根据材料编码查询 -->
+    <select id="selectByMaterialCode" resultType="net.lab1024.sa.admin.module.business.material.domain.entity.MaterialEntity">
+        SELECT * FROM b_material
+        WHERE material_code = #{materialCode}
+        AND deleted_flag = 0
+        LIMIT 1
+    </select>
+
+    <!-- 分页查询材料 -->
+    <select id="query" resultType="net.lab1024.sa.admin.module.business.material.domain.vo.MaterialVO">
+        SELECT * FROM b_material
+        <where>
+            <if test="query.searchWord != null and query.searchWord != ''">
+                AND (INSTR(material_name, #{query.searchWord}) OR INSTR(material_code, #{query.searchWord}))
+            </if>
+            <if test="query.materialCode != null and query.materialCode != ''">
+                AND INSTR(material_code, #{query.materialCode})
+            </if>
+            <if test="query.materialCategoryId != null">
+                AND material_category_id = #{query.materialCategoryId}
+            </if>
+            <if test="query.disabledFlag != null">
+                AND disabled_flag = #{query.disabledFlag}
+            </if>
+            <if test="query.deletedFlag != null">
+                AND deleted_flag = #{query.deletedFlag}
+            </if>
+        </where>
+        <if test="query.sortItemList == null or query.sortItemList.size == 0">
+            ORDER BY material_id DESC
+        </if>
+    </select>
+
+</mapper>
