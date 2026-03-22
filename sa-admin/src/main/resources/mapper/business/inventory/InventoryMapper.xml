@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.business.inventory.dao.InventoryDao">
+
+    <select id="query" resultType="net.lab1024.sa.admin.module.business.inventory.domain.vo.InventoryVO">
+        SELECT * FROM b_inventory
+        <where>
+            <if test="query.searchWord != null and query.searchWord != ''">
+                AND (INSTR(material_name, #{query.searchWord}) OR INSTR(material_code, #{query.searchWord}) OR INSTR(batch_no, #{query.searchWord}))
+            </if>
+            <if test="query.materialId != null">
+                AND material_id = #{query.materialId}
+            </if>
+            <if test="query.materialCode != null and query.materialCode != ''">
+                AND INSTR(material_code, #{query.materialCode})
+            </if>
+            <if test="query.materialName != null and query.materialName != ''">
+                AND INSTR(material_name, #{query.materialName})
+            </if>
+            <if test="query.batchNo != null and query.batchNo != ''">
+                AND INSTR(batch_no, #{query.batchNo})
+            </if>
+            <if test="query.warningStatus != null">
+                AND warning_status = #{query.warningStatus}
+            </if>
+            <if test="query.storageLocation != null and query.storageLocation != ''">
+                AND INSTR(storage_location, #{query.storageLocation})
+            </if>
+        </where>
+        <if test="query.sortItemList == null or query.sortItemList.size == 0">
+            ORDER BY inventory_id DESC
+        </if>
+    </select>
+
+    <select id="selectByMaterialIdAndBatchNo" resultType="net.lab1024.sa.admin.module.business.inventory.domain.entity.InventoryEntity">
+        SELECT * FROM b_inventory
+        WHERE material_id = #{materialId}
+        <if test="batchNo != null and batchNo != ''">
+            AND batch_no = #{batchNo}
+        </if>
+        <if test="batchNo == null or batchNo == ''">
+            AND batch_no IS NULL
+        </if>
+        LIMIT 1
+    </select>
+
+    <select id="queryWarningList" resultType="net.lab1024.sa.admin.module.business.inventory.domain.vo.InventoryWarningVO">
+        SELECT * FROM b_inventory
+        WHERE warning_status &gt; 0
+        <if test="warningStatus != null">
+            AND warning_status = #{warningStatus}
+        </if>
+        ORDER BY 
+        CASE warning_status 
+            WHEN 3 THEN 1 
+            WHEN 1 THEN 2 
+            WHEN 2 THEN 3 
+            ELSE 4 
+        END,
+        inventory_id DESC
+    </select>
+
+    <update id="updateWarningStatus">
+        UPDATE b_inventory
+        SET warning_status = #{warningStatus}
+        WHERE inventory_id = #{inventoryId}
+    </update>
+
+    <select id="queryByMaterialId" resultType="net.lab1024.sa.admin.module.business.inventory.domain.vo.InventoryVO">
+        SELECT * FROM b_inventory
+        WHERE material_id = #{materialId}
+        ORDER BY expiration_date ASC, inventory_id DESC
+    </select>
+
+</mapper>

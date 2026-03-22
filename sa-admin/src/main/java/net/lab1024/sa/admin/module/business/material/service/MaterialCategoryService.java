@@ -144,7 +144,7 @@ public class MaterialCategoryService {
 
         List<MaterialCategoryEntity> allCategoryList = materialCategoryDao.queryAll(false);
         List<MaterialCategoryEntity> rootCategoryList = allCategoryList.stream()
-                .filter(e -> e.getParentId().equals(parentId))
+                .filter(e -> e.getParentId().equals(queryForm.getParentId() == null ? DEFAULT_PARENT_ID : queryForm.getParentId()))
                 .collect(Collectors.toList());
 
         List<MaterialCategoryTreeVO> treeList = SmartBeanUtil.copyList(rootCategoryList, MaterialCategoryTreeVO.class);

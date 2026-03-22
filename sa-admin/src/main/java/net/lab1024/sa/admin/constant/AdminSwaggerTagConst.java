@@ -22,6 +22,12 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String MANAGER_MATERIAL_CATEGORY = "材料管理-材料分类";
 
+        public static final String MANAGER_SUPPLIER = "供应商管理-供应商信息";
+
+        public static final String MANAGER_SUPPLIER_EVALUATE = "供应商管理-供应商评价";
+
+        public static final String MANAGER_INVENTORY = "库存管理-库存信息";
+
         public static final String OA_BANK = "OA办公-银行卡信息";
 
         public static final String OA_ENTERPRISE = "OA办公-企业";

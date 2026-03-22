@@ -3,10 +3,10 @@ package net.lab1024.sa.base.config;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import net.lab1024.sa.base.common.json.deserializer.FlexibleLocalDateDeserializer;
 import net.lab1024.sa.base.common.json.serializer.LongJsonSerializer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 /**
@@ -35,10 +36,10 @@ public class JsonConfig {
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer customizer() {
         return builder -> {
-            builder.deserializers(new LocalDateDeserializer(DatePattern.NORM_DATE_FORMAT.getDateTimeFormatter()));
-            builder.deserializers(new LocalDateTimeDeserializer(DatePattern.NORM_DATETIME_FORMAT.getDateTimeFormatter()));
-            builder.serializers(new LocalDateSerializer(DatePattern.NORM_DATE_FORMAT.getDateTimeFormatter()));
-            builder.serializers(new LocalDateTimeSerializer(DatePattern.NORM_DATETIME_FORMAT.getDateTimeFormatter()));
+            builder.deserializerByType(LocalDate.class, new FlexibleLocalDateDeserializer());
+            builder.deserializerByType(LocalDateTime.class, new LocalDateTimeDeserializer(DatePattern.NORM_DATETIME_FORMAT.getDateTimeFormatter()));
+            builder.serializerByType(LocalDate.class, new LocalDateSerializer(DatePattern.NORM_DATE_FORMAT.getDateTimeFormatter()));
+            builder.serializerByType(LocalDateTime.class, new LocalDateTimeSerializer(DatePattern.NORM_DATETIME_FORMAT.getDateTimeFormatter()));
             builder.serializerByType(Long.class, LongJsonSerializer.INSTANCE);
             builder.serializerByType(Long.TYPE, LongJsonSerializer.INSTANCE);
             builder.serializerByType(BigInteger.class, ToStringSerializer.instance);
@@ -86,7 +87,11 @@ public class JsonConfig {
             }
             LocalDate localDate;
             try {
-                localDate = LocalDateTimeUtil.parseDate(str, DatePattern.NORM_DATE_FORMAT.getDateTimeFormatter());
+                if (str.contains("T")) {
+                    localDate = LocalDate.parse(str, DateTimeFormatter.ISO_DATE_TIME);
+                } else {
+                    localDate = LocalDateTimeUtil.parseDate(str, DatePattern.NORM_DATE_FORMAT.getDateTimeFormatter());
+                }
             } catch (DateTimeParseException e) {
                 throw new RuntimeException("请输入正确的日期格式：yyyy-MM-dd");
             }

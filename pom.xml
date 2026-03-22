@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>17</java.version>
-        <springboot.version>3.5.4</springboot.version>
+        <springboot.version>3.4.5</springboot.version>
         <spring-security-crypto.version>6.5.1</spring-security-crypto.version>
         <mybatis-plus.version>3.5.12</mybatis-plus.version>
         <p6spy.version>3.9.1</p6spy.version>
@@ -32,7 +32,7 @@
         <reflections.version>0.10.2</reflections.version>
         <commons-io.version>2.19.0</commons-io.version>
         <commons-lang3.version>3.18.0</commons-lang3.version>
-        <commons-collections4.version>4.5.0</commons-collections4.version>
+        <commons-collections4.version>4.4</commons-collections4.version>
         <commons-compress.version>1.27.1</commons-compress.version>
         <commons-codec.version>1.18.0</commons-codec.version>
         <commons-text.version>1.13.1</commons-text.version>

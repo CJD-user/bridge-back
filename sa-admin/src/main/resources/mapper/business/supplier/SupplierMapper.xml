@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.business.supplier.dao.SupplierDao">
+
+    <select id="query" resultType="net.lab1024.sa.admin.module.business.supplier.domain.vo.SupplierVO">
+        SELECT * FROM b_supplier
+        <where>
+            <if test="query.searchWord != null and query.searchWord != ''">
+                AND (INSTR(supplier_name, #{query.searchWord}) OR INSTR(supplier_code, #{query.searchWord}) OR INSTR(contact_person, #{query.searchWord}))
+            </if>
+            <if test="query.supplierCode != null and query.supplierCode != ''">
+                AND INSTR(supplier_code, #{query.supplierCode})
+            </if>
+            <if test="query.supplierName != null and query.supplierName != ''">
+                AND INSTR(supplier_name, #{query.supplierName})
+            </if>
+            <if test="query.contactPerson != null and query.contactPerson != ''">
+                AND INSTR(contact_person, #{query.contactPerson})
+            </if>
+            <if test="query.province != null">
+                AND province = #{query.province}
+            </if>
+            <if test="query.city != null">
+                AND city = #{query.city}
+            </if>
+            <if test="query.rating != null">
+                AND rating = #{query.rating}
+            </if>
+            <if test="query.disabledFlag != null">
+                AND disabled_flag = #{query.disabledFlag}
+            </if>
+            <if test="query.deletedFlag != null">
+                AND deleted_flag = #{query.deletedFlag}
+            </if>
+        </where>
+        <if test="query.sortItemList == null or query.sortItemList.size == 0">
+            ORDER BY supplier_id DESC
+        </if>
+    </select>
+
+    <update id="batchUpdateDeleted">
+        UPDATE b_supplier
+        SET deleted_flag = #{deletedFlag}
+        WHERE supplier_id IN
+        <foreach collection="supplierIdList" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="selectBySupplierCode" resultType="net.lab1024.sa.admin.module.business.supplier.domain.entity.SupplierEntity">
+        SELECT * FROM b_supplier
+        WHERE supplier_code = #{supplierCode}
+        AND deleted_flag = 0
+        LIMIT 1
+    </select>
+
+</mapper>
