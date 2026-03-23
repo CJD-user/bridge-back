@@ -1,20 +1,20 @@
-package net.lab1024.sa.admin.module.business.approvalFlow.domain.vo;
+package net.lab1024.sa.admin.module.business.approval.domain.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
 import lombok.Data;
 
-/**
- * 审批流程配置表 列表VO
- *
- * @Author hyc
- * @Date 2026-03-22 15:50:20
- * @Copyright /
- */
+import java.time.LocalDateTime;
+import java.util.List;
 
+/**
+ * 审批流程 VO
+ *
+ * @Author 1024创新实验室
+ * @Date 2024-01-01
+ * @Copyright 1024创新实验室
+ */
 @Data
 public class ApprovalFlowVO {
-
 
     @Schema(description = "审批流程ID")
     private Long approvalFlowId;
@@ -25,20 +25,17 @@ public class ApprovalFlowVO {
     @Schema(description = "流程编码")
     private String flowCode;
 
-    @Schema(description = "业务类型: 1-采购申请 2-出库申请 3-供应商评价")
+    @Schema(description = "业务类型: 1-采购申请 2-出库申请")
     private Integer businessType;
+
+    @Schema(description = "业务类型名称")
+    private String businessTypeName;
 
     @Schema(description = "流程描述")
     private String description;
 
     @Schema(description = "状态: 0-停用 1-启用")
     private Integer status;
-
-    @Schema(description = "删除状态: 0未删除 1已删除")
-    private Integer deletedFlag;
-
-    @Schema(description = "创建人ID")
-    private Long createUserId;
 
     @Schema(description = "创建人姓名")
     private String createUserName;
@@ -49,4 +46,6 @@ public class ApprovalFlowVO {
     @Schema(description = "更新时间")
     private LocalDateTime updateTime;
 
+    @Schema(description = "审批节点列表")
+    private List<ApprovalNodeVO> nodeList;
 }
