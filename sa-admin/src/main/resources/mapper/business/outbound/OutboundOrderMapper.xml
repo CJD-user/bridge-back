@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.business.outbound.dao.OutboundOrderDao">
+
+    <select id="query" resultType="net.lab1024.sa.admin.module.business.outbound.domain.vo.OutboundOrderVO">
+        SELECT * FROM b_outbound_order
+        <where>
+            <if test="query.searchWord != null and query.searchWord != ''">
+                AND (INSTR(outbound_order_no, #{query.searchWord}) OR INSTR(project_name, #{query.searchWord}) OR INSTR(receiver_name, #{query.searchWord}))
+            </if>
+            <if test="query.outboundOrderNo != null and query.outboundOrderNo != ''">
+                AND INSTR(outbound_order_no, #{query.outboundOrderNo})
+            </if>
+            <if test="query.projectName != null and query.projectName != ''">
+                AND INSTR(project_name, #{query.projectName})
+            </if>
+            <if test="query.outboundType != null">
+                AND outbound_type = #{query.outboundType}
+            </if>
+            <if test="query.approvalStatus != null">
+                AND approval_status = #{query.approvalStatus}
+            </if>
+            <if test="query.status != null">
+                AND status = #{query.status}
+            </if>
+            <if test="query.deletedFlag != null">
+                AND deleted_flag = #{query.deletedFlag}
+            </if>
+            <if test="query.createUserId != null">
+                AND create_user_id = #{query.createUserId}
+            </if>
+        </where>
+        <if test="query.sortItemList == null or query.sortItemList.size == 0">
+            ORDER BY outbound_order_id DESC
+        </if>
+    </select>
+
+    <select id="selectByOrderNo" resultType="net.lab1024.sa.admin.module.business.outbound.domain.entity.OutboundOrderEntity">
+        SELECT * FROM b_outbound_order
+        WHERE outbound_order_no = #{outboundOrderNo}
+        LIMIT 1
+    </select>
+
+    <insert id="batchInsertItems">
+        INSERT INTO b_outbound_order_item (outbound_order_id, material_id, material_code, material_name, specification_model, unit, request_quantity, approved_quantity, actual_quantity, unit_price, total_price, batch_no, storage_location, remark)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.outboundOrderId}, #{item.materialId}, #{item.materialCode}, #{item.materialName}, #{item.specificationModel}, #{item.unit}, #{item.requestQuantity}, #{item.approvedQuantity}, #{item.actualQuantity}, #{item.unitPrice}, #{item.totalPrice}, #{item.batchNo}, #{item.storageLocation}, #{item.remark})
+        </foreach>
+    </insert>
+
+    <select id="queryItemsByOrderId" resultType="net.lab1024.sa.admin.module.business.outbound.domain.entity.OutboundOrderItemEntity">
+        SELECT * FROM b_outbound_order_item
+        WHERE outbound_order_id = #{outboundOrderId}
+        ORDER BY outbound_order_item_id ASC
+    </select>
+
+    <delete id="deleteItemsByOrderId">
+        DELETE FROM b_outbound_order_item
+        WHERE outbound_order_id = #{outboundOrderId}
+    </delete>
+
+</mapper>

@@ -30,4 +30,6 @@ public interface InventoryDao extends BaseMapper<InventoryEntity> {
     int updateWarningStatus(@Param("inventoryId") Long inventoryId, @Param("warningStatus") Integer warningStatus);
 
     List<InventoryVO> queryByMaterialId(@Param("materialId") Long materialId);
+
+    List<InventoryEntity> queryByMaterialIdRaw(@Param("materialId") Long materialId);
 }

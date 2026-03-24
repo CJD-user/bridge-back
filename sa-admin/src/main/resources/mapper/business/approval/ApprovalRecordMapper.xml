@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.business.approval.dao.ApprovalRecordDao">
+
+    <select id="queryByBusinessId" resultType="net.lab1024.sa.admin.module.business.approval.domain.entity.ApprovalRecordEntity">
+        SELECT * FROM b_approval_record
+        WHERE business_type = #{businessType}
+        AND business_id = #{businessId}
+        ORDER BY node_order ASC, approval_record_id ASC
+    </select>
+
+    <select id="selectByBusinessAndNode" resultType="net.lab1024.sa.admin.module.business.approval.domain.entity.ApprovalRecordEntity">
+        SELECT * FROM b_approval_record
+        WHERE business_type = #{businessType}
+        AND business_id = #{businessId}
+        AND node_order = #{nodeOrder}
+        LIMIT 1
+    </select>
+
+</mapper>

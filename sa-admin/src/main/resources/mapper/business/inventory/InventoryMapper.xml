@@ -72,4 +72,10 @@
         ORDER BY expiration_date ASC, inventory_id DESC
     </select>
 
+    <select id="queryByMaterialIdRaw" resultType="net.lab1024.sa.admin.module.business.inventory.domain.entity.InventoryEntity">
+        SELECT * FROM b_inventory
+        WHERE material_id = #{materialId}
+        ORDER BY expiration_date ASC, inventory_id DESC
+    </select>
+
 </mapper>
