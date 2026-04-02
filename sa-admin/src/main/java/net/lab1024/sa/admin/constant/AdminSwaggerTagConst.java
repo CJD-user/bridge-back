@@ -32,6 +32,8 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String MANAGER_OUTBOUND_ORDER = "出库管理-出库申请";
 
+        public static final String MANAGER_PROJECT = "项目管理-项目信息";
+
         public static final String OA_BANK = "OA办公-银行卡信息";
 
         public static final String OA_ENTERPRISE = "OA办公-企业";
