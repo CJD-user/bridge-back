@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.business.purchase.dao.PurchaseOrderDao">
+
+    <select id="query" resultType="net.lab1024.sa.admin.module.business.purchase.domain.vo.PurchaseOrderVO">
+        SELECT * FROM b_purchase_order
+        <where>
+            <if test="query.searchWord != null and query.searchWord != ''">
+                AND (INSTR(purchase_order_no, #{query.searchWord}) OR INSTR(project_name, #{query.searchWord}))
+            </if>
+            <if test="query.purchaseOrderNo != null and query.purchaseOrderNo != ''">
+                AND INSTR(purchase_order_no, #{query.purchaseOrderNo})
+            </if>
+            <if test="query.projectName != null and query.projectName != ''">
+                AND INSTR(project_name, #{query.projectName})
+            </if>
+            <if test="query.projectId != null">
+                AND project_id = #{query.projectId}
+            </if>
+            <if test="query.purchaseType != null">
+                AND purchase_type = #{query.purchaseType}
+            </if>
+            <if test="query.approvalStatus != null">
+                AND approval_status = #{query.approvalStatus}
+            </if>
+            <if test="query.deletedFlag != null">
+                AND deleted_flag = #{query.deletedFlag}
+            </if>
+            <if test="query.createUserId != null">
+                AND create_user_id = #{query.createUserId}
+            </if>
+        </where>
+        <if test="query.sortItemList == null or query.sortItemList.size == 0">
+            ORDER BY purchase_order_id DESC
+        </if>
+    </select>
+
+    <select id="selectByOrderNo" resultType="net.lab1024.sa.admin.module.business.purchase.domain.entity.PurchaseOrderEntity">
+        SELECT * FROM b_purchase_order
+        WHERE purchase_order_no = #{purchaseOrderNo}
+        LIMIT 1
+    </select>
+
+    <insert id="batchInsertItems">
+        INSERT INTO b_purchase_order_item (purchase_order_id, material_id, material_code, material_name, specification_model, unit, purchase_quantity, unit_price, total_price, supplier_id, supplier_name, remark)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.purchaseOrderId}, #{item.materialId}, #{item.materialCode}, #{item.materialName}, #{item.specificationModel}, #{item.unit}, #{item.purchaseQuantity}, #{item.unitPrice}, #{item.totalPrice}, #{item.supplierId}, #{item.supplierName}, #{item.remark})
+        </foreach>
+    </insert>
+
+    <select id="queryItemsByOrderId" resultType="net.lab1024.sa.admin.module.business.purchase.domain.entity.PurchaseOrderItemEntity">
+        SELECT * FROM b_purchase_order_item
+        WHERE purchase_order_id = #{purchaseOrderId}
+        ORDER BY purchase_order_item_id ASC
+    </select>
+
+    <delete id="deleteItemsByOrderId">
+        DELETE FROM b_purchase_order_item
+        WHERE purchase_order_id = #{purchaseOrderId}
+    </delete>
+
+</mapper>
