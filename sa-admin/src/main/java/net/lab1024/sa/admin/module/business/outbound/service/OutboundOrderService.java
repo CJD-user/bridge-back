@@ -24,6 +24,7 @@ import net.lab1024.sa.admin.module.business.outbound.domain.form.OutboundOrderAd
 import net.lab1024.sa.admin.module.business.outbound.domain.form.OutboundOrderQueryForm;
 import net.lab1024.sa.admin.module.business.outbound.domain.vo.OutboundOrderItemVO;
 import net.lab1024.sa.admin.module.business.outbound.domain.vo.OutboundOrderVO;
+import net.lab1024.sa.admin.module.business.warning.service.InventoryWarningService;
 import net.lab1024.sa.admin.module.system.login.domain.RequestEmployee;
 import net.lab1024.sa.admin.util.AdminRequestUtil;
 import net.lab1024.sa.base.common.code.UserErrorCode;
@@ -96,6 +97,9 @@ public class OutboundOrderService {
 
     @Resource
     private MessageService messageService;
+
+    @Resource
+    private InventoryWarningService inventoryWarningService;
 
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> add(OutboundOrderAddForm addForm) {
@@ -401,6 +405,14 @@ public class OutboundOrderService {
             calculateWarningStatusForInventory(updateEntity, materialEntity);
 
             inventoryDao.updateById(updateEntity);
+
+            MaterialEntity updateMaterial = new MaterialEntity();
+            updateMaterial.setMaterialId(item.getMaterialId());
+            updateMaterial.setCurrentStock(materialEntity.getCurrentStock() != null ? materialEntity.getCurrentStock().subtract(item.getActualQuantity()) : item.getActualQuantity().negate());
+            materialDao.updateById(updateMaterial);
+
+            BigDecimal newCurrentStock = updateMaterial.getCurrentStock();
+            inventoryWarningService.checkAndCreateWarning(item.getMaterialId(), newCurrentStock);
         }
 
         orderEntity.setStatus(STATUS_OUTBOUND);

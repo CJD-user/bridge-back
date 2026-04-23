@@ -10,6 +10,7 @@ import net.lab1024.sa.admin.module.business.project.domain.entity.ProjectEntity;
 import net.lab1024.sa.admin.module.business.project.domain.form.ProjectAddForm;
 import net.lab1024.sa.admin.module.business.project.domain.form.ProjectQueryForm;
 import net.lab1024.sa.admin.module.business.project.domain.form.ProjectUpdateForm;
+import net.lab1024.sa.admin.module.business.project.domain.vo.ProjectOutboundMaterialVO;
 import net.lab1024.sa.admin.module.business.project.domain.vo.ProjectVO;
 import net.lab1024.sa.admin.module.system.login.domain.RequestEmployee;
 import net.lab1024.sa.admin.util.AdminRequestUtil;
@@ -131,6 +132,16 @@ public class ProjectService {
         updateEntity.setProjectStatus(projectStatus);
         projectDao.updateById(updateEntity);
         return ResponseDTO.ok();
+    }
+
+    public ResponseDTO<List<ProjectOutboundMaterialVO>> getOutboundMaterials(Long projectId) {
+        ProjectEntity entity = projectDao.selectById(projectId);
+        if (entity == null || entity.getDeletedFlag()) {
+            return ResponseDTO.userErrorParam("项目不存在");
+        }
+
+        List<ProjectOutboundMaterialVO> list = projectDao.queryOutboundMaterialsByProjectId(projectId);
+        return ResponseDTO.ok(list);
     }
 
     private void fillDictNames(List<ProjectVO> list) {

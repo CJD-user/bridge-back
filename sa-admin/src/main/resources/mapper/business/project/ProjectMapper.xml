@@ -50,4 +50,23 @@
         ORDER BY project_id DESC
     </select>
 
+    <select id="queryOutboundMaterialsByProjectId" resultType="net.lab1024.sa.admin.module.business.project.domain.vo.ProjectOutboundMaterialVO">
+        SELECT 
+            ooi.material_id,
+            ooi.material_code,
+            ooi.material_name,
+            ooi.specification_model,
+            ooi.unit,
+            SUM(ooi.actual_quantity) AS totalQuantity,
+            SUM(ooi.total_price) AS totalAmount,
+            COUNT(DISTINCT oo.outbound_order_id) AS outboundCount
+        FROM b_outbound_order oo
+        INNER JOIN b_outbound_order_item ooi ON oo.outbound_order_id = ooi.outbound_order_id
+        WHERE oo.project_id = #{projectId}
+        AND oo.deleted_flag = 0
+        AND oo.status = 2
+        GROUP BY ooi.material_id, ooi.material_code, ooi.material_name, ooi.specification_model, ooi.unit
+        ORDER BY totalQuantity DESC
+    </select>
+
 </mapper>

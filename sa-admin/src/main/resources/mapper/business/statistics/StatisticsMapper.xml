@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.business.statistics.dao.StatisticsDao">
+
+    <select id="queryTop10Inventory" resultType="net.lab1024.sa.admin.module.business.statistics.domain.vo.InventoryStatisticsVO">
+        SELECT 
+            i.material_id,
+            i.material_code,
+            i.material_name,
+            i.specification_model,
+            i.unit,
+            i.quantity,
+            i.available_quantity AS availableQuantity,
+            (i.quantity * i.unit_price) AS totalAmount
+        FROM b_inventory i
+        WHERE i.quantity > 0
+        ORDER BY i.quantity DESC
+        LIMIT 10
+    </select>
+
+    <select id="queryPurchaseStatistics" resultType="net.lab1024.sa.admin.module.business.statistics.domain.vo.PurchaseStatisticsVO">
+        SELECT 
+            DATE_FORMAT(po.create_time, '%Y-%m-%d') AS date,
+            SUM(po.total_amount) AS totalAmount,
+            COUNT(DISTINCT po.purchase_order_id) AS orderCount,
+            COUNT(DISTINCT poi.material_id) AS materialCount
+        FROM b_purchase_order po
+        LEFT JOIN b_purchase_order_item poi ON po.purchase_order_id = poi.purchase_order_id
+        WHERE po.deleted_flag = 0
+        AND po.approval_status = 2
+        AND DATE(po.create_time) BETWEEN #{startDate} AND #{endDate}
+        GROUP BY DATE_FORMAT(po.create_time, '%Y-%m-%d')
+        ORDER BY date ASC
+    </select>
+
+    <select id="queryOutboundStatistics" resultType="net.lab1024.sa.admin.module.business.statistics.domain.vo.OutboundStatisticsVO">
+        SELECT 
+            DATE_FORMAT(oo.create_time, '%Y-%m-%d') AS date,
+            SUM(oo.total_amount) AS totalAmount,
+            COUNT(DISTINCT oo.outbound_order_id) AS orderCount,
+            COUNT(DISTINCT ooi.material_id) AS materialCount
+        FROM b_outbound_order oo
+        LEFT JOIN b_outbound_order_item ooi ON oo.outbound_order_id = ooi.outbound_order_id
+        WHERE oo.deleted_flag = 0
+        AND oo.status = 2
+        AND DATE(oo.create_time) BETWEEN #{startDate} AND #{endDate}
+        GROUP BY DATE_FORMAT(oo.create_time, '%Y-%m-%d')
+        ORDER BY date ASC
+    </select>
+
+    <select id="queryBaseStatistics" resultType="net.lab1024.sa.admin.module.business.statistics.domain.vo.BaseStatisticsVO">
+        SELECT 
+            (SELECT COUNT(*) FROM b_material WHERE deleted_flag = 0) AS materialCount,
+            (SELECT COUNT(*) FROM b_project WHERE deleted_flag = 0) AS projectCount,
+            (SELECT COUNT(*) FROM b_supplier WHERE deleted_flag = 0) AS supplierCount,
+            (SELECT COUNT(*) FROM b_inventory WHERE warning_status > 0) AS inventoryWarningCount,
+            (SELECT COUNT(*) FROM b_purchase_order WHERE deleted_flag = 0 AND approval_status = 1) AS pendingPurchaseCount,
+            (SELECT COUNT(*) FROM b_outbound_order WHERE deleted_flag = 0 AND approval_status = 1) AS pendingOutboundCount
+    </select>
+
+</mapper>

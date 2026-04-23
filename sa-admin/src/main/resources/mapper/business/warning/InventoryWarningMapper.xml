@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.business.warning.dao.InventoryWarningDao">
+
+    <select id="query" resultType="net.lab1024.sa.admin.module.business.warning.domain.vo.InventoryWarningVO">
+        SELECT * FROM b_inventory_warning
+        <where>
+            <if test="query.searchWord != null and query.searchWord != ''">
+                AND (INSTR(material_code, #{query.searchWord}) OR INSTR(material_name, #{query.searchWord}))
+            </if>
+            <if test="query.warningType != null">
+                AND warning_type = #{query.warningType}
+            </if>
+            <if test="query.warningLevel != null">
+                AND warning_level = #{query.warningLevel}
+            </if>
+            <if test="query.handleStatus != null">
+                AND handle_status = #{query.handleStatus}
+            </if>
+        </where>
+        ORDER BY warning_level DESC, create_time DESC
+    </select>
+
+    <select id="selectByMaterialAndType" resultType="net.lab1024.sa.admin.module.business.warning.domain.entity.InventoryWarningEntity">
+        SELECT * FROM b_inventory_warning
+        WHERE material_id = #{materialId}
+        AND warning_type = #{warningType}
+        AND handle_status = #{handleStatus}
+        LIMIT 1
+    </select>
+
+</mapper>

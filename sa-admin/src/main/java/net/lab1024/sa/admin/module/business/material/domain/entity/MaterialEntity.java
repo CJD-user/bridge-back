@@ -60,9 +60,10 @@ public class MaterialEntity {
      */
     private BigDecimal safetyStockThreshold;
 
-    /**
-     * 保质期(天)
-     */
+    private BigDecimal currentStock;
+
+    private BigDecimal minWarningQuantity;
+
     private Integer shelfLifeDays;
 
     /**

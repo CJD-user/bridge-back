@@ -36,6 +36,12 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String MANAGER_PURCHASE_ORDER = "采购管理-采购申请";
 
+        public static final String MANAGER_STATISTICS = "统计管理-数据统计";
+
+        public static final String MANAGER_INVENTORY_WARNING = "预警管理-库存预警";
+
+        public static final String MANAGER_INBOUND_RECORD = "入库管理-入库记录";
+
         public static final String OA_BANK = "OA办公-银行卡信息";
 
         public static final String OA_ENTERPRISE = "OA办公-企业";

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.business.inbound.dao.InboundRecordDao">
+
+    <select id="query" resultType="net.lab1024.sa.admin.module.business.inbound.domain.vo.InboundRecordVO">
+        SELECT * FROM b_inbound_record
+        <where>
+            <if test="query.searchWord != null and query.searchWord != ''">
+                AND (INSTR(material_code, #{query.searchWord}) OR INSTR(material_name, #{query.searchWord}) OR INSTR(batch_no, #{query.searchWord}))
+            </if>
+            <if test="query.materialId != null">
+                AND material_id = #{query.materialId}
+            </if>
+            <if test="query.inboundType != null">
+                AND inbound_type = #{query.inboundType}
+            </if>
+            <if test="query.projectId != null">
+                AND project_id = #{query.projectId}
+            </if>
+            <if test="query.deletedFlag != null">
+                AND deleted_flag = #{query.deletedFlag}
+            </if>
+        </where>
+        ORDER BY inbound_record_id DESC
+    </select>
+
+</mapper>

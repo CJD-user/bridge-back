@@ -9,6 +9,7 @@ import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.business.project.domain.form.ProjectAddForm;
 import net.lab1024.sa.admin.module.business.project.domain.form.ProjectQueryForm;
 import net.lab1024.sa.admin.module.business.project.domain.form.ProjectUpdateForm;
+import net.lab1024.sa.admin.module.business.project.domain.vo.ProjectOutboundMaterialVO;
 import net.lab1024.sa.admin.module.business.project.domain.vo.ProjectVO;
 import net.lab1024.sa.admin.module.business.project.service.ProjectService;
 import net.lab1024.sa.base.common.domain.PageResult;
@@ -77,5 +78,12 @@ public class ProjectController {
     @SaCheckPermission("project:update")
     public ResponseDTO<String> updateStatus(@PathVariable Long projectId, @PathVariable Integer projectStatus) {
         return projectService.updateStatus(projectId, projectStatus);
+    }
+
+    @Operation(summary = "查询项目出库材料明细 @author 1024创新实验室")
+    @GetMapping("/project/outboundMaterials/{projectId}")
+    @SaCheckPermission("project:query")
+    public ResponseDTO<List<ProjectOutboundMaterialVO>> outboundMaterials(@PathVariable Long projectId) {
+        return projectService.getOutboundMaterials(projectId);
     }
 }

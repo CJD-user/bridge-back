@@ -48,6 +48,10 @@ public class MaterialAddForm {
     @DecimalMin(value = "0", message = "安全库存阈值不能小于0")
     private BigDecimal safetyStockThreshold;
 
+    @Schema(description = "最低预警数量")
+    @DecimalMin(value = "0", message = "最低预警数量不能小于0")
+    private BigDecimal minWarningQuantity;
+
     @Schema(description = "保质期(天)")
     private Integer shelfLifeDays;
 

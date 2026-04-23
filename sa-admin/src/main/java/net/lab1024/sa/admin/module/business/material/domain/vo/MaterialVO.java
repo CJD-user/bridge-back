@@ -43,6 +43,12 @@ public class MaterialVO {
     @Schema(description = "安全库存阈值")
     private BigDecimal safetyStockThreshold;
 
+    @Schema(description = "当前库存数量")
+    private BigDecimal currentStock;
+
+    @Schema(description = "最低预警数量")
+    private BigDecimal minWarningQuantity;
+
     @Schema(description = "保质期(天)")
     private Integer shelfLifeDays;
 
