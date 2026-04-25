@@ -19,6 +19,10 @@ public class InventoryWarningQueryForm extends PageParam {
     @Length(max = 100, message = "搜索词最多100字符")
     private String searchWord;
 
+    @Schema(description = "材料名称")
+    @Length(max = 200, message = "材料名称最多200字符")
+    private String materialName;
+
     @Schema(description = "预警类型: 1-库存不足 2-即将过期 3-已过期")
     private Integer warningType;
 

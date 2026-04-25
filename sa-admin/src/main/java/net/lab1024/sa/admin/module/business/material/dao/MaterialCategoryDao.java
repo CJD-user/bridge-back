@@ -24,5 +24,7 @@ public interface MaterialCategoryDao extends BaseMapper<MaterialCategoryEntity> 
 
     MaterialCategoryEntity selectByCategoryCode(@Param("categoryCode") String categoryCode);
 
+    MaterialCategoryEntity selectByCategoryName(@Param("categoryName") String categoryName);
+
     MaterialCategoryEntity selectOne(MaterialCategoryEntity entity);
 }

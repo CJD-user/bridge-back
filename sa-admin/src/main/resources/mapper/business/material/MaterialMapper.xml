@@ -30,6 +30,9 @@
             <if test="query.materialCode != null and query.materialCode != ''">
                 AND INSTR(material_code, #{query.materialCode})
             </if>
+            <if test="query.materialName != null and query.materialName != ''">
+                AND INSTR(material_name, #{query.materialName})
+            </if>
             <if test="query.materialCategoryId != null">
                 AND material_category_id = #{query.materialCategoryId}
             </if>

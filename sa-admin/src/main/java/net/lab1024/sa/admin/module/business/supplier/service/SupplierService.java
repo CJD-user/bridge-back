@@ -8,6 +8,7 @@ import net.lab1024.sa.admin.module.business.supplier.domain.entity.SupplierEntit
 import net.lab1024.sa.admin.module.business.supplier.domain.form.SupplierAddForm;
 import net.lab1024.sa.admin.module.business.supplier.domain.form.SupplierQueryForm;
 import net.lab1024.sa.admin.module.business.supplier.domain.form.SupplierUpdateForm;
+import net.lab1024.sa.admin.module.business.supplier.domain.vo.SupplierPurchaseRecordVO;
 import net.lab1024.sa.admin.module.business.supplier.domain.vo.SupplierVO;
 import net.lab1024.sa.base.common.code.UserErrorCode;
 import net.lab1024.sa.base.common.domain.PageResult;
@@ -129,6 +130,27 @@ public class SupplierService {
                 .filter(e -> !e.getDeletedFlag() && !e.getDisabledFlag())
                 .map(e -> SmartBeanUtil.copy(e, SupplierVO.class))
                 .collect(Collectors.toList());
+        return ResponseDTO.ok(list);
+    }
+
+    private static final String[] PURCHASE_TYPE_NAMES = {"", "常规采购", "紧急采购", "补货采购"};
+    private static final String[] APPROVAL_STATUS_NAMES = {"待提交", "审批中", "已通过", "已驳回", "已撤回"};
+
+    public ResponseDTO<List<SupplierPurchaseRecordVO>> getPurchaseRecords(Long supplierId) {
+        SupplierEntity supplierEntity = supplierDao.selectById(supplierId);
+        if (supplierEntity == null || supplierEntity.getDeletedFlag()) {
+            return ResponseDTO.userErrorParam("供应商不存在");
+        }
+
+        List<SupplierPurchaseRecordVO> list = supplierDao.queryPurchaseRecordsBySupplierId(supplierId);
+        list.forEach(e -> {
+            if (e.getPurchaseType() != null && e.getPurchaseType() >= 1 && e.getPurchaseType() <= 3) {
+                e.setPurchaseTypeName(PURCHASE_TYPE_NAMES[e.getPurchaseType()]);
+            }
+            if (e.getApprovalStatus() != null && e.getApprovalStatus() >= 0 && e.getApprovalStatus() <= 4) {
+                e.setApprovalStatusName(APPROVAL_STATUS_NAMES[e.getApprovalStatus()]);
+            }
+        });
         return ResponseDTO.ok(list);
     }
 }

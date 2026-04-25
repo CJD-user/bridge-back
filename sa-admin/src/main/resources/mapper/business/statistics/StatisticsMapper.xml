@@ -4,17 +4,18 @@
 
     <select id="queryTop10Inventory" resultType="net.lab1024.sa.admin.module.business.statistics.domain.vo.InventoryStatisticsVO">
         SELECT 
-            i.material_id,
-            i.material_code,
-            i.material_name,
-            i.specification_model,
-            i.unit,
-            i.quantity,
-            i.available_quantity AS availableQuantity,
-            (i.quantity * i.unit_price) AS totalAmount
-        FROM b_inventory i
-        WHERE i.quantity > 0
-        ORDER BY i.quantity DESC
+            m.material_id,
+            m.material_code,
+            m.material_name,
+            m.specification_model,
+            m.unit,
+            m.current_stock AS quantity,
+            m.current_stock AS availableQuantity,
+            (m.current_stock * m.unit_price) AS totalAmount
+        FROM b_material m
+        WHERE m.deleted_flag = 0
+        AND m.current_stock > 0
+        ORDER BY m.current_stock DESC
         LIMIT 10
     </select>
 
@@ -53,7 +54,7 @@
             (SELECT COUNT(*) FROM b_material WHERE deleted_flag = 0) AS materialCount,
             (SELECT COUNT(*) FROM b_project WHERE deleted_flag = 0) AS projectCount,
             (SELECT COUNT(*) FROM b_supplier WHERE deleted_flag = 0) AS supplierCount,
-            (SELECT COUNT(*) FROM b_inventory WHERE warning_status > 0) AS inventoryWarningCount,
+            (SELECT COUNT(*) FROM b_inventory_warning WHERE handle_status = 0) AS inventoryWarningCount,
             (SELECT COUNT(*) FROM b_purchase_order WHERE deleted_flag = 0 AND approval_status = 1) AS pendingPurchaseCount,
             (SELECT COUNT(*) FROM b_outbound_order WHERE deleted_flag = 0 AND approval_status = 1) AS pendingOutboundCount
     </select>

@@ -8,6 +8,12 @@
             <if test="query.searchWord != null and query.searchWord != ''">
                 AND (INSTR(material_code, #{query.searchWord}) OR INSTR(material_name, #{query.searchWord}) OR INSTR(batch_no, #{query.searchWord}))
             </if>
+            <if test="query.materialCode != null and query.materialCode != ''">
+                AND INSTR(material_code, #{query.materialCode})
+            </if>
+            <if test="query.materialName != null and query.materialName != ''">
+                AND INSTR(material_name, #{query.materialName})
+            </if>
             <if test="query.materialId != null">
                 AND material_id = #{query.materialId}
             </if>

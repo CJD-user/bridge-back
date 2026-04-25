@@ -47,14 +47,12 @@ public class OutboundOrderController {
 
     @Operation(summary = "查询出库申请详情 @author 1024创新实验室")
     @GetMapping("/outboundOrder/detail/{outboundOrderId}")
-    @SaCheckPermission("outboundOrder:query")
     public ResponseDTO<OutboundOrderVO> detail(@PathVariable Long outboundOrderId) {
         return outboundOrderService.getDetail(outboundOrderId);
     }
 
     @Operation(summary = "发起出库申请 @author 1024创新实验室")
     @PostMapping("/outboundOrder/add")
-    @SaCheckPermission("outboundOrder:add")
     public ResponseDTO<String> add(@RequestBody @Valid OutboundOrderAddForm addForm) {
         return outboundOrderService.add(addForm);
     }
@@ -74,7 +72,6 @@ public class OutboundOrderController {
 
     @Operation(summary = "撤回出库申请 @author 1024创新实验室")
     @GetMapping("/outboundOrder/withdraw/{outboundOrderId}")
-    @SaCheckPermission("outboundOrder:update")
     public ResponseDTO<String> withdraw(@PathVariable Long outboundOrderId) {
         return outboundOrderService.withdraw(outboundOrderId);
     }

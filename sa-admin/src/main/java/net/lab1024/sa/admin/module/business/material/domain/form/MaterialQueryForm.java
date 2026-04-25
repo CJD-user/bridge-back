@@ -26,6 +26,10 @@ public class MaterialQueryForm extends PageParam {
     @Length(max = 50, message = "材料编码最多50字符")
     private String materialCode;
 
+    @Schema(description = "材料名称")
+    @Length(max = 200, message = "材料名称最多200字符")
+    private String materialName;
+
     @Schema(description = "禁用状态")
     private Boolean disabledFlag;
 

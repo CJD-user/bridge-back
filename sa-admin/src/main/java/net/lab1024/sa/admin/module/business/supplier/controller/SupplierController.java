@@ -9,6 +9,7 @@ import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.business.supplier.domain.form.SupplierAddForm;
 import net.lab1024.sa.admin.module.business.supplier.domain.form.SupplierQueryForm;
 import net.lab1024.sa.admin.module.business.supplier.domain.form.SupplierUpdateForm;
+import net.lab1024.sa.admin.module.business.supplier.domain.vo.SupplierPurchaseRecordVO;
 import net.lab1024.sa.admin.module.business.supplier.domain.vo.SupplierVO;
 import net.lab1024.sa.admin.module.business.supplier.service.SupplierService;
 import net.lab1024.sa.base.common.domain.PageResult;
@@ -85,5 +86,12 @@ public class SupplierController {
     @GetMapping("/supplier/listAll")
     public ResponseDTO<List<SupplierVO>> listAll() {
         return supplierService.listAll();
+    }
+
+    @Operation(summary = "查询供应商采购记录 @author 1024创新实验室")
+    @GetMapping("/supplier/purchaseRecords/{supplierId}")
+    @SaCheckPermission("supplier:query")
+    public ResponseDTO<List<SupplierPurchaseRecordVO>> purchaseRecords(@PathVariable Long supplierId) {
+        return supplierService.getPurchaseRecords(supplierId);
     }
 }

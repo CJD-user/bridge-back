@@ -54,4 +54,25 @@
         LIMIT 1
     </select>
 
+    <select id="queryPurchaseRecordsBySupplierId" resultType="net.lab1024.sa.admin.module.business.supplier.domain.vo.SupplierPurchaseRecordVO">
+        SELECT 
+            po.purchase_order_id,
+            po.purchase_order_no,
+            po.project_name,
+            po.purchase_type,
+            poi.material_id,
+            poi.material_code,
+            poi.material_name,
+            poi.purchase_quantity,
+            poi.unit_price,
+            poi.total_price,
+            po.approval_status,
+            po.create_time
+        FROM b_purchase_order_item poi
+        INNER JOIN b_purchase_order po ON poi.purchase_order_id = po.purchase_order_id
+        WHERE poi.supplier_id = #{supplierId}
+        AND po.deleted_flag = 0
+        ORDER BY po.create_time DESC
+    </select>
+
 </mapper>

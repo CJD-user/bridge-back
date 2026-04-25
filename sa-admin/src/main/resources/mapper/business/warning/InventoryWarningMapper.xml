@@ -8,6 +8,9 @@
             <if test="query.searchWord != null and query.searchWord != ''">
                 AND (INSTR(material_code, #{query.searchWord}) OR INSTR(material_name, #{query.searchWord}))
             </if>
+            <if test="query.materialName != null and query.materialName != ''">
+                AND INSTR(material_name, #{query.materialName})
+            </if>
             <if test="query.warningType != null">
                 AND warning_type = #{query.warningType}
             </if>

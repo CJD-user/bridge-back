@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.sa.admin.module.business.supplier.domain.entity.SupplierEntity;
 import net.lab1024.sa.admin.module.business.supplier.domain.form.SupplierQueryForm;
+import net.lab1024.sa.admin.module.business.supplier.domain.vo.SupplierPurchaseRecordVO;
 import net.lab1024.sa.admin.module.business.supplier.domain.vo.SupplierVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -25,4 +26,6 @@ public interface SupplierDao extends BaseMapper<SupplierEntity> {
     void batchUpdateDeleted(@Param("supplierIdList") List<Long> supplierIdList, @Param("deletedFlag") Boolean deletedFlag);
 
     SupplierEntity selectBySupplierCode(@Param("supplierCode") String supplierCode);
+
+    List<SupplierPurchaseRecordVO> queryPurchaseRecordsBySupplierId(@Param("supplierId") Long supplierId);
 }

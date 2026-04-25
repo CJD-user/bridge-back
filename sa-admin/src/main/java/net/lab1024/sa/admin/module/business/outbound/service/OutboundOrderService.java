@@ -376,42 +376,23 @@ public class OutboundOrderService {
         }
 
         for (OutboundOrderItemEntity item : itemEntities) {
-            InventoryEntity inventoryEntity = inventoryDao.selectByMaterialIdAndBatchNo(item.getMaterialId(), item.getBatchNo());
-            if (inventoryEntity == null) {
-                List<InventoryEntity> inventoryList = inventoryDao.queryByMaterialIdRaw(item.getMaterialId());
-                if (CollectionUtils.isNotEmpty(inventoryList)) {
-                    inventoryEntity = inventoryList.get(0);
-                }
-            }
-
-            if (inventoryEntity == null) {
-                return ResponseDTO.userErrorParam("材料【" + item.getMaterialName() + "】库存不足，无法出库");
-            }
-
-            if (inventoryEntity.getAvailableQuantity().compareTo(item.getActualQuantity()) < 0) {
-                return ResponseDTO.userErrorParam("材料【" + item.getMaterialName() + "】可用库存不足，当前可用库存：" + inventoryEntity.getAvailableQuantity() + "，申请数量：" + item.getActualQuantity());
-            }
-
-            BigDecimal newQuantity = inventoryEntity.getQuantity().subtract(item.getActualQuantity());
-            BigDecimal newAvailableQuantity = inventoryEntity.getAvailableQuantity().subtract(item.getActualQuantity());
-
-            InventoryEntity updateEntity = new InventoryEntity();
-            updateEntity.setInventoryId(inventoryEntity.getInventoryId());
-            updateEntity.setQuantity(newQuantity);
-            updateEntity.setAvailableQuantity(newAvailableQuantity);
-            updateEntity.setLastOutboundTime(LocalDateTime.now());
-
             MaterialEntity materialEntity = materialDao.selectById(item.getMaterialId());
-            calculateWarningStatusForInventory(updateEntity, materialEntity);
+            if (materialEntity == null) {
+                return ResponseDTO.userErrorParam("材料【" + item.getMaterialName() + "】不存在");
+            }
 
-            inventoryDao.updateById(updateEntity);
+            BigDecimal currentStock = materialEntity.getCurrentStock() != null ? materialEntity.getCurrentStock() : BigDecimal.ZERO;
+            if (currentStock.compareTo(item.getActualQuantity()) < 0) {
+                return ResponseDTO.userErrorParam("材料【" + item.getMaterialName() + "】库存不足，当前库存：" + currentStock + "，申请数量：" + item.getActualQuantity());
+            }
+
+            BigDecimal newCurrentStock = currentStock.subtract(item.getActualQuantity());
 
             MaterialEntity updateMaterial = new MaterialEntity();
             updateMaterial.setMaterialId(item.getMaterialId());
-            updateMaterial.setCurrentStock(materialEntity.getCurrentStock() != null ? materialEntity.getCurrentStock().subtract(item.getActualQuantity()) : item.getActualQuantity().negate());
+            updateMaterial.setCurrentStock(newCurrentStock);
             materialDao.updateById(updateMaterial);
 
-            BigDecimal newCurrentStock = updateMaterial.getCurrentStock();
             inventoryWarningService.checkAndCreateWarning(item.getMaterialId(), newCurrentStock);
         }
 

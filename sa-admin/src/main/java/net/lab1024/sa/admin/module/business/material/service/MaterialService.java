@@ -225,6 +225,10 @@ public class MaterialService {
             
             Long categoryId = null;
             if (StringUtils.isNotBlank(importForm.getCategoryName())) {
+                MaterialCategoryEntity categoryEntity = materialCategoryDao.selectByCategoryName(importForm.getCategoryName());
+                if (categoryEntity != null) {
+                    categoryId = categoryEntity.getMaterialCategoryId();
+                }
             }
             
             MaterialEntity materialEntity = SmartBeanUtil.copy(importForm, MaterialEntity.class);

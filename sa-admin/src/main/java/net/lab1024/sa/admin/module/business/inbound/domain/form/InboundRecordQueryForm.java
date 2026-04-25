@@ -19,6 +19,14 @@ public class InboundRecordQueryForm extends PageParam {
     @Length(max = 100, message = "搜索词最多100字符")
     private String searchWord;
 
+    @Schema(description = "材料编码")
+    @Length(max = 50, message = "材料编码最多50字符")
+    private String materialCode;
+
+    @Schema(description = "材料名称")
+    @Length(max = 200, message = "材料名称最多200字符")
+    private String materialName;
+
     @Schema(description = "材料ID")
     private Long materialId;
 

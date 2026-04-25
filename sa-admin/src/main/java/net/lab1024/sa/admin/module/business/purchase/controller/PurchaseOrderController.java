@@ -47,14 +47,12 @@ public class PurchaseOrderController {
 
     @Operation(summary = "查询采购申请详情 @author 1024创新实验室")
     @GetMapping("/purchaseOrder/detail/{purchaseOrderId}")
-    @SaCheckPermission("purchaseOrder:query")
     public ResponseDTO<PurchaseOrderVO> detail(@PathVariable Long purchaseOrderId) {
         return purchaseOrderService.getDetail(purchaseOrderId);
     }
 
     @Operation(summary = "发起采购申请 @author 1024创新实验室")
     @PostMapping("/purchaseOrder/add")
-    @SaCheckPermission("purchaseOrder:add")
     public ResponseDTO<String> add(@RequestBody @Valid PurchaseOrderAddForm addForm) {
         return purchaseOrderService.add(addForm);
     }
@@ -74,7 +72,6 @@ public class PurchaseOrderController {
 
     @Operation(summary = "撤回采购申请 @author 1024创新实验室")
     @GetMapping("/purchaseOrder/withdraw/{purchaseOrderId}")
-    @SaCheckPermission("purchaseOrder:update")
     public ResponseDTO<String> withdraw(@PathVariable Long purchaseOrderId) {
         return purchaseOrderService.withdraw(purchaseOrderId);
     }
